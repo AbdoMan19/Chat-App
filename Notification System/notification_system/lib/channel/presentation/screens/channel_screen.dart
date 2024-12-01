@@ -122,7 +122,7 @@ class _ChannelScreenState extends ConsumerState<ChannelScreen> {
                                   child: Container(
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .background
+                                        .surface
                                         .withOpacity(0.5),
                                     child: channelsPages[_selectedIndex],
                                   ),

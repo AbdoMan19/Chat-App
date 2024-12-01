@@ -18,9 +18,20 @@ extension ValidationExtensions on String {
     return regExp.hasMatch(username);
   }
 
+  bool _validateTopicName(String channelName) {
+    // Firebase topics allow only alphanumeric characters, dashes, and underscores
+    final topicNameRegExp = RegExp(r'^[a-zA-Z0-9_-]+$');
+    if (channelName.length > 900 || !topicNameRegExp.hasMatch(channelName)) {
+      return false;
+    }
+    return topicNameRegExp.hasMatch(channelName);
+  }
+
   bool get isValidEmail => _validateEmail(this);
 
   bool get isValidPassword => _validatePassword(this);
 
   bool get isValidUsername => _validateUsername(this);
+
+  bool get isValidTopicName => _validateTopicName(this);
 }

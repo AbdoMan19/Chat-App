@@ -76,7 +76,7 @@ class ChannelController extends StateNotifier<ChannelState> {
     } catch (e) {
       state = ChannelState(
           channels: state.channels, isLoading: false, error: Exception(e));
-      throw e;
+      rethrow;
     }
     return false;
   }

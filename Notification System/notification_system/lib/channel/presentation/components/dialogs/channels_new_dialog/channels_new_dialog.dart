@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notification_system/authentication/presentation/components/Forms/sign_in_form/sign_in_form.dart';
+import 'package:notification_system/core/extensions/validation_extensions.dart';
 import 'package:notification_system/core/generic_components/generic_dialog/generic_dialog.dart';
 
 import '../../../../../core/generic_components/generic_text_form_field/generic_text_form_field.dart';
@@ -37,7 +39,7 @@ class _ChannelsNewDialogState extends ConsumerState<ChannelsNewDialog> {
           fieldKey: fieldKey,
           controller: controller,
           validator: (value) {
-            if (value == null || value.isEmpty) {
+            if (value == null || value.isEmpty || !value.isValidTopicName) {
               return 'Please enter a channel name';
             }
             return null;
