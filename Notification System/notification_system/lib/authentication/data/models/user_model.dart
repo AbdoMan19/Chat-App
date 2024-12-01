@@ -12,7 +12,7 @@ class UserModel extends entity.User {
       name: user.displayName!,
     );
   }
-
+  
   @override
   String toString() {
     return 'UserModel(uuid: $uuid, email: $email, name: $name)';

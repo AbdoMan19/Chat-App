@@ -7,13 +7,10 @@ ColorScheme colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
 );
 
-AppBarTheme appBarTheme = const AppBarTheme(
+AppBarTheme appBarTheme = AppBarTheme(
   systemOverlayStyle: SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
+    statusBarColor: colorScheme.surface,
     statusBarIconBrightness: Brightness.light,
-    statusBarBrightness: Brightness.dark,
-    systemNavigationBarColor: Colors.black,
-    systemNavigationBarIconBrightness: Brightness.light,
   ),
 );
 

@@ -8,22 +8,22 @@ class AuthenticationRepository implements BaseAuthenticationRepository {
   AuthenticationRepository(this.remoteDataSource);
 
   @override
-  Future<User?> signIn(String email, String password) async {
+  Future<User?> signIn(String email, String password) {
     return remoteDataSource.signIn(email, password);
   }
 
   @override
-  Future<User?> signUp(String username, String email, String password) async {
+  Future<User?> signUp(String username, String email, String password) {
     return remoteDataSource.signUp(username, email, password);
   }
 
   @override
-  Future<void> signOut() async {
+  Future<void> signOut() {
     return remoteDataSource.signOut();
   }
 
   @override
-  Future<User?> getCurrentUser() async {
+  Future<User?> getCurrentUser() {
     return remoteDataSource.getCurrentUser();
   }
 }

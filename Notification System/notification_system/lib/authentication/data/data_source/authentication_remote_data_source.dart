@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../models/user_model.dart';
 
@@ -19,6 +21,23 @@ class AuthenticationRemoteDataSource
   final FirebaseAuth firebaseAuth;
 
   AuthenticationRemoteDataSource(this.firebaseAuth);
+
+  Future<void> saveFcmToken(String userId) async {
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      await FirebaseFirestore.instance
+          .collection('fcmTokens')
+          .doc(userId)
+          .set({'token': token});
+    }
+  }
+
+  Future<void> removeFcmToken(String userId) async {
+    await FirebaseFirestore.instance
+        .collection('fcmTokens')
+        .doc(userId)
+        .delete();
+  }
 
   @override
   Future<UserModel?> getCurrentUser() async {
@@ -41,6 +60,7 @@ class AuthenticationRemoteDataSource
         password: password,
       );
       if (signInResult.user != null) {
+        await saveFcmToken(signInResult.user!.uid);
         return UserModel.fromFirebaseUser(signInResult.user!);
       }
       return null;
@@ -52,6 +72,10 @@ class AuthenticationRemoteDataSource
   @override
   Future<void> signOut() async {
     try {
+      final currentUser = firebaseAuth.currentUser;
+      if (currentUser != null) {
+        await removeFcmToken(currentUser.uid);
+      }
       await firebaseAuth.signOut();
     } catch (e) {
       throw Exception(e);
@@ -70,6 +94,7 @@ class AuthenticationRemoteDataSource
       if (updatedUser != null) {
         await updatedUser.updateDisplayName(username);
         await updatedUser.reload();
+        await saveFcmToken(updatedUser.uid);
         updatedUser = firebaseAuth.currentUser;
       }
       return updatedUser != null
