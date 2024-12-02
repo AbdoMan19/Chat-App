@@ -22,7 +22,6 @@ class ChatRoomController extends StateNotifier<List<Message>> {
         'text': messageText,
         'timestamp': ServerValue.timestamp,
       });
-      loadMessages();
     } catch (e) {
       log("Error sending message: $e");
     }

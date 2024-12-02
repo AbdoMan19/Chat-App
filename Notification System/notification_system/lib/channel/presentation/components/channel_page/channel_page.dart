@@ -7,10 +7,15 @@ import '../../controllers/messages_controller.dart';
 import '../message_bubble/message_bubble.dart';
 
 class ChannelPage extends ConsumerStatefulWidget {
-  const ChannelPage({super.key, required this.channel, required this.userId});
+  const ChannelPage(
+      {super.key,
+      required this.channel,
+      required this.userId,
+      required this.resetIndex});
 
   final Channel channel;
   final String userId;
+  final Function resetIndex;
 
   @override
   ConsumerState<ChannelPage> createState() => _ChannelPageState();
@@ -55,13 +60,22 @@ class _ChannelPageState extends ConsumerState<ChannelPage> {
           actions: [
             IconButton(
               icon: const Icon(Icons.exit_to_app),
-              onPressed: () {
-                ref
+              onPressed: () async {
+                bool? result = await ref
                     .read(channelControllerProvider.notifier)
                     .unsubscribeFromChannel(
                       widget.userId,
                       widget.channel.name,
                     );
+                if (result != null && result) {
+                  widget.resetIndex();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to unsubscribe from channel'),
+                    ),
+                  );
+                }
               },
             ),
           ],

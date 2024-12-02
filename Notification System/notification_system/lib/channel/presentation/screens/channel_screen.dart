@@ -28,7 +28,6 @@ class _ChannelScreenState extends ConsumerState<ChannelScreen> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(channelControllerProvider.notifier).loadChannels(
             ref.watch(authenticationControllerProvider).user!.uuid,
@@ -42,12 +41,19 @@ class _ChannelScreenState extends ConsumerState<ChannelScreen> {
     super.dispose();
   }
 
+  void resetIndex() {
+    setState(() {
+      _selectedIndex = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final channelControllerState = ref.watch(channelControllerProvider);
     final user = ref.watch(authenticationControllerProvider).user!;
     final List<Widget> channelsPages = channelControllerState.channels
-        .map((channel) => ChannelPage(channel: channel, userId: user.uuid))
+        .map((channel) => ChannelPage(
+            channel: channel, userId: user.uuid, resetIndex: resetIndex))
         .toList();
     final channel = channelControllerState.channels.isNotEmpty
         ? channelControllerState.channels[_selectedIndex]
@@ -127,6 +133,7 @@ class _ChannelScreenState extends ConsumerState<ChannelScreen> {
                                     child: channelsPages[_selectedIndex],
                                   ),
                                 ),
+                                Divider(height: 1),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: TextFormField(
@@ -134,7 +141,7 @@ class _ChannelScreenState extends ConsumerState<ChannelScreen> {
                                     keyboardType: TextInputType.multiline,
                                     focusNode: FocusNode(),
                                     decoration: InputDecoration(
-                                      border: const OutlineInputBorder(),
+                                      border: InputBorder.none,
                                       hintText: 'Type a message',
                                       suffixIcon: IconButton(
                                         icon: const Icon(Icons.send),

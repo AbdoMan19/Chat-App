@@ -16,6 +16,12 @@ class ListAllChannelsScreen extends ConsumerStatefulWidget {
 
 class _ListAllChannelsScreenState extends ConsumerState<ListAllChannelsScreen> {
   @override
+  void initState() {
+    super.initState();
+    ref.refresh(getChannelsController);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final channelsState = ref.watch(getChannelsController);
     ref.listen(channelControllerProvider, (previous, next) {
