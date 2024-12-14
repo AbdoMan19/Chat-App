@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notification_system/channel/domain/use_cases/add_channel_use_case.dart';
 import 'package:notification_system/channel/domain/use_cases/get_user_channels_use_case.dart';
+import 'package:notification_system/channel/domain/use_cases/remove_channel_use_case.dart';
 import 'package:notification_system/channel/domain/use_cases/subscribe_to_channel_use_case.dart';
 import 'package:notification_system/channel/presentation/controllers/providers/add_channel_provider.dart';
 import 'package:notification_system/channel/presentation/controllers/providers/get_user_channels_provider.dart';
+import 'package:notification_system/channel/presentation/controllers/providers/remove_channel_provider.dart';
 import 'package:notification_system/channel/presentation/controllers/providers/subscribe_to_channel_provider.dart';
 import 'package:notification_system/channel/presentation/controllers/providers/unsubscribe_to_channel_provider.dart';
 
@@ -29,9 +31,14 @@ class ChannelController extends StateNotifier<ChannelState> {
   final GetUserChannelsUseCase getUserChannelsUseCase;
   final UnsubscribeToChannelUseCase unsubscribeToChannelUseCase;
   final SubscribeToChannelUseCase subscribeToChannelUseCase;
+  final RemoveChannelUseCase removeChannelUseCase;
 
-  ChannelController(this.addChannelUseCase, this.getUserChannelsUseCase,
-      this.unsubscribeToChannelUseCase, this.subscribeToChannelUseCase)
+  ChannelController(
+      this.addChannelUseCase,
+      this.getUserChannelsUseCase,
+      this.unsubscribeToChannelUseCase,
+      this.subscribeToChannelUseCase,
+      this.removeChannelUseCase)
       : super(ChannelState(channels: [], isLoading: false));
 
   Future<void> loadChannels(String userId) async {
@@ -52,6 +59,25 @@ class ChannelController extends StateNotifier<ChannelState> {
       if (result != null) {
         state = ChannelState(
             channels: [...state.channels, result], isLoading: false);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      state = ChannelState(
+          channels: state.channels, isLoading: false, error: e as Exception);
+    }
+    return null;
+  }
+
+  Future<bool?> removeChannel(String channelName) async {
+    try {
+      Channel? result = await removeChannelUseCase.execute(channelName);
+      if (result != null) {
+        state = ChannelState(
+            channels: state.channels
+                .where((element) => element.name != channelName)
+                .toList(),
+            isLoading: false);
         return true;
       }
       return false;
@@ -106,10 +132,10 @@ final channelControllerProvider =
     StateNotifierProvider<ChannelController, ChannelState>(
   (ref) {
     return ChannelController(
-      ref.read(addChannelProvider),
-      ref.read(getUserChannelsProvider),
-      ref.read(unsubscribeToChannelProvider),
-      ref.read(subscribeToChannelProvider),
-    );
+        ref.read(addChannelProvider),
+        ref.read(getUserChannelsProvider),
+        ref.read(unsubscribeToChannelProvider),
+        ref.read(subscribeToChannelProvider),
+        ref.read(removeChannelProvider));
   },
 );

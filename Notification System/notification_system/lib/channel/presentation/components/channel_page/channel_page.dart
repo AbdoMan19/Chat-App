@@ -71,7 +71,7 @@ class _ChannelPageState extends ConsumerState<ChannelPage> {
                   widget.resetIndex();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text('Failed to unsubscribe from channel'),
                     ),
                   );

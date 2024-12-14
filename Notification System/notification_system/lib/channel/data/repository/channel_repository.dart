@@ -18,6 +18,11 @@ class ChannelRepository implements BaseChannelRepository {
   }
 
   @override
+  Future<Channel?> removeChannel(String channelName) async {
+    return await _channelRemoteDataSource.removeChannel(channelName);
+  }
+
+  @override
   Future<Channel?> subscribeToChannel(String userId, String channelName) async {
     return await _channelRemoteDataSource.subscribeToChannel(
         userId, channelName);

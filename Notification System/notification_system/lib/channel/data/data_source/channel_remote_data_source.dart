@@ -9,6 +9,8 @@ abstract class BaseChannelRemoteDataSource {
 
   Future<ChannelModel?> addChannel(String userId, String channelName);
 
+  Future<ChannelModel?> removeChannel(String channelName);
+
   Future<List<ChannelModel>> getUserChannels(String userId);
 
   Future<ChannelModel?> subscribeToChannel(String userId, String channelName);
@@ -19,6 +21,7 @@ abstract class BaseChannelRemoteDataSource {
 class ChannelRemoteDataSource implements BaseChannelRemoteDataSource {
   final FirebaseFirestore _fireStore;
   final FirebaseMessaging _firebaseMessaging;
+
   ChannelRemoteDataSource(this._fireStore, this._firebaseMessaging);
 
   @override
@@ -40,6 +43,23 @@ class ChannelRemoteDataSource implements BaseChannelRemoteDataSource {
         'name': channelName,
         'subscribers': [userId],
       });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<ChannelModel?> removeChannel(String channelName) async {
+    try {
+      final snapshot = await _fireStore
+          .collection('channels')
+          .where('name', isEqualTo: channelName)
+          .get();
+      if (snapshot.docs.isEmpty) return null;
+      await _fireStore.collection('channels').doc(snapshot.docs[0].id).delete();
+      await _firebaseMessaging.unsubscribeFromTopic(channelName);
+      return ChannelModel.fromFireStore(
+          snapshot.docs[0].id, snapshot.docs[0].data());
     } catch (e) {
       rethrow;
     }
@@ -76,40 +96,6 @@ class ChannelRemoteDataSource implements BaseChannelRemoteDataSource {
         'subscribers': FieldValue.arrayUnion([userId]),
       });
       await _firebaseMessaging.subscribeToTopic(channelName);
-
-      //TODO: Implement FCM
-      // final updatedChannelSnapshot =
-      //     await _fireStore.collection('channels').doc(channelId).get();
-
-      // final subscribers = List<String>.from(
-      //     updatedChannelSnapshot.data()?['subscribers'] ?? []);
-
-      // final otherSubscribers = subscribers.where((id) => id != userId).toList();
-      // if (otherSubscribers.isNotEmpty) {
-      //   final tokensSnapshot = await _fireStore
-      //       .collection('fcmTokens')
-      //       .where(FieldPath.documentId, whereIn: otherSubscribers)
-      //       .get();
-      //
-      //   final tokens = tokensSnapshot.docs
-      //       .map((doc) => doc['token'] as String?)
-      //       .where((token) => token != null && token.isNotEmpty)
-      //       .toList();
-      //
-      //   for (final token in tokens) {
-      //     log('Sending message to token: $token');
-      //     await FirebaseMessaging.instance.sendMessage(
-      //       to: token,
-      //       data: {
-      //         'title': 'New Subscriber!',
-      //       },
-      //     ).then((value) {
-      //       log('Message sent to token: $token');
-      //     }).catchError((e) {
-      //       log('Error sending message to token: $token');
-      //     });
-      //   }
-      // }
       return ChannelModel.fromFireStore(channelId, channelDoc.data());
     } catch (e) {
       rethrow;
@@ -125,11 +111,14 @@ class ChannelRemoteDataSource implements BaseChannelRemoteDataSource {
           .where('name', isEqualTo: channelName)
           .get();
       if (snapshot.docs.isEmpty) return false;
+      if (snapshot.docs[0].data()['subscribers'].length == 1) {
+        removeChannel(channelName);
+        return true;
+      }
       await _fireStore.collection('channels').doc(snapshot.docs[0].id).update({
         'subscribers': FieldValue.arrayRemove([userId]),
       });
       await _firebaseMessaging.unsubscribeFromTopic(channelName);
-
       return true;
     } catch (e) {
       log(e.toString());
