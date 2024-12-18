@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -48,6 +49,7 @@ class AuthenticationScreenState extends ConsumerState<AuthenticationScreen>
     ref.listen<AuthenticationState>(
       authenticationControllerProvider,
       (previous, next) {
+        log('AuthenticationState: ${next.user}');
         if (next.exception != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(next.exception!.toString())),
@@ -55,6 +57,7 @@ class AuthenticationScreenState extends ConsumerState<AuthenticationScreen>
         }
         if (next.user != null) {
           Navigator.of(context).pop();
+
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const ChannelScreen(),

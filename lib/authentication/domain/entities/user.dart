@@ -1,6 +1,6 @@
 class User {
   final String uuid;
-  final String email;
+  final String? email;
   final String name;
 
   User({

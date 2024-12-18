@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../domain/entities/user.dart' as entity;
@@ -8,8 +10,8 @@ class UserModel extends entity.User {
   factory UserModel.fromFirebaseUser(User user) {
     return UserModel(
       uuid: user.uid,
-      email: user.email!,
-      name: user.displayName!,
+      email: user.email == null ? "" : user.email!,
+      name: user.displayName == null ? user.phoneNumber! : user.displayName!,
     );
   }
   

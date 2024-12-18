@@ -4,6 +4,7 @@ import 'package:chato/core/utils/open_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../channel/presentation/screens/channel_screen.dart';
 import '../../controllers/authentication_controller.dart';
 
 class OTPDialog extends ConsumerWidget {
@@ -23,8 +24,28 @@ class OTPDialog extends ConsumerWidget {
       buttonText: 'Verify',
       textAlign: TextAlign.center,
       onButtonPressed: () async {
-        await ref.read(authenticationControllerProvider.notifier).verifyPhoneNumber(verificationId, _controllers.map((e) => e.text).join());
-        Navigator.of(context).pop();
+        ref.read(authenticationControllerProvider.notifier).verifyPhoneNumber(verificationId, _controllers.map((e) => e.text).join()).then(
+              (value) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.of(context).pop();
+                if(ref.watch(authenticationControllerProvider).user != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Phone number verified successfully')),
+                  );
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ChannelScreen(),
+                    ),
+                  );
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('An error occurred while verifying the phone number')),
+                  );
+                }
+              });
+          },
+        );
       },
       contentPlacement: ContentPlacement.afterTitle,
     );

@@ -154,7 +154,8 @@ class AuthenticationRemoteDataSource
         smsCode: smsCode,
       );
       final userCredential = await firebaseAuth.signInWithCredential(credential);
-      if (userCredential.user != null) {
+      log('UserCredential: ' + userCredential.user.toString() + userCredential.user!.uid);
+      if(userCredential.user != null) {
         await saveFcmToken(userCredential.user!.uid);
         return UserModel.fromFirebaseUser(userCredential.user!);
       }
