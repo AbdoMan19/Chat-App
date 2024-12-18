@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "58557711026",
+    "firebase_url": "https://chato-app11-default-rtdb.firebaseio.com",
+    "project_id": "chato-app11",
+    "storage_bucket": "chato-app11.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58557711026:android:9f49d2e219347a1506ffab",
+        "android_client_info": {
+          "package_name": "com.chato.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "58557711026-02v27r2hned7l6fl5934fejnhoh05t10.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chato.app",
+            "certificate_hash": "73783fe2a0dea2dff8885e8e8d6259fa4c3acbe2"
+          }
+        },
+        {
+          "client_id": "58557711026-inq0k3a0h20brdcq688t09m7nmsrh6s2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5mfZXzXJm_f3wjnMjpjzCiDbjpVg9uww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "58557711026-inq0k3a0h20brdcq688t09m7nmsrh6s2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
