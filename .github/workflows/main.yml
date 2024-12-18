@@ -41,6 +41,6 @@ jobs:
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: "1:58557711026:android:9f49d2e219347a1506ffab"
-          token: ${{ secrets.FIREBASE_TOKEN }}
+          token: ${{ FIREBASE_TOKEN }}
           testers: leewenhoek22@gmail.com 
           file: build/app/outputs/flutter-apk/app-release.apk
