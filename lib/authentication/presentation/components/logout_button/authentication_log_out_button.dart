@@ -9,7 +9,7 @@ class AuthenticationLogOutButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context , WidgetRef ref) {
-    return  IconButton(
+    return IconButton(
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -21,8 +21,8 @@ class AuthenticationLogOutButton extends ConsumerWidget {
       ),
       color: Theme.of(context).colorScheme.primary,
       icon: const Icon(Icons.logout),
-      onPressed: () {
-        ref.read(authenticationControllerProvider.notifier).signOut();
+      onPressed: () async {
+       await ref.read(authenticationControllerProvider.notifier).signOut();
       },
     );
   }

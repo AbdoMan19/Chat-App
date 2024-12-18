@@ -1,6 +1,4 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,11 +43,10 @@ class AuthenticationScreenState extends ConsumerState<AuthenticationScreen>
   @override
   Widget build(BuildContext context) {
     final bodyMedium = Theme.of(context).textTheme.bodyMedium!;
-
     ref.listen<AuthenticationState>(
       authenticationControllerProvider,
-      (previous, next) {
-        log('AuthenticationState: ${next.user}');
+          (previous, next) async {
+
         if (next.exception != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(next.exception!.toString())),
@@ -57,7 +54,6 @@ class AuthenticationScreenState extends ConsumerState<AuthenticationScreen>
         }
         if (next.user != null) {
           Navigator.of(context).pop();
-
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const ChannelScreen(),

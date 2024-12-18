@@ -101,6 +101,16 @@ class AuthenticationController extends StateNotifier<AuthenticationState> {
     }
   }
 
+  Future<void> getCurrentUser() async {
+    state = AuthenticationState(isLoading: true);
+    try {
+      final user = await authenticationGetUserUseCase.execute(null);
+      state = AuthenticationState(user: user);
+    } on Exception catch (e, _) {
+      state = AuthenticationState(exception: e);
+    }
+  }
+
   Future<void> signOut() async {
     state = AuthenticationState(isLoading: true);
     try {

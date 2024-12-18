@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:chato/authentication/presentation/screens/authentication_screen.dart';
 
 import 'Themes/dark_theme.dart';
+import 'authentication/presentation/controllers/authentication_controller.dart';
 import 'firebase_options.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -110,11 +111,11 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context , WidgetRef ref)  {
     return MaterialApp(
       title: 'Notification System',
       theme: darkTheme,

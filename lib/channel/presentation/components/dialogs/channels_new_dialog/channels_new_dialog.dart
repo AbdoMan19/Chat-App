@@ -61,7 +61,9 @@ class _ChannelsNewDialogState extends ConsumerState<ChannelsNewDialog> {
               .read(channelControllerProvider.notifier)
               .addChannel(widget.userId, controller.text);
           if (result == true) {
-            Navigator.of(context).pop();
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pop();
+            });
           } else {
             setState(() {
               channelFound = true;
