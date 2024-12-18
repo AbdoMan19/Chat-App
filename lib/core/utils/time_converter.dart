@@ -8,7 +8,7 @@ class TimeConverter {
     DateTime now = DateTime.now();
     int diff = now.difference(dateTime).inSeconds;
     if (diff < 60) {
-      return '${diff.toString()}s agos';
+      return '${diff.toString()}s ago';
     } else if (diff < 3600) {
       return '${diff ~/ 60}m ago and ${diff % 60}s ago';
     } else if (diff < 86400) {
